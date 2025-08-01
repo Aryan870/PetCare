@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const DoctorSignup = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'doctor',
-    fee: '',
-    speciality: '',
-    experience: '',
-    timings: '',
-    availability: [{ day: '', startTime: '', endTime: '' }],
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "doctor",
+    fee: "",
+    speciality: "",
+    experience: "",
+    timings: "",
+    availability: [{ day: "", startTime: "", endTime: "" }],
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,39 +42,53 @@ const DoctorSignup = () => {
   const addAvailability = () => {
     setFormData((prevData) => ({
       ...prevData,
-      availability: [...prevData.availability, { day: '', startTime: '', endTime: '' }],
+      availability: [
+        ...prevData.availability,
+        { day: "", startTime: "", endTime: "" },
+      ],
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
     try {
       const { confirmPassword, availability, ...rest } = formData;
-      const timings = availability.map(item => `${item.day}: ${item.startTime}-${item.endTime}`).join('; ');
+      const timings = availability
+        .map((item) => `${item.day}: ${item.startTime}-${item.endTime}`)
+        .join("; ");
       const dataToSend = { ...rest, timings };
-      const response = await axios.post('http://localhost:5000/api/auth/register', dataToSend);
-      alert('Registration successful! Please log in.');
-      navigate('/doctorLogin');
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        dataToSend
+      );
+      alert("Registration successful! Please log in.");
+      navigate("/doctorLogin");
     } catch (error) {
-      console.error('Error registering the doctor:', error);
-      setError('Registration failed. Please try again.');
+      console.error("Error registering the doctor:", error);
+      setError("Registration failed. Please try again.");
     }
   };
 
   return (
     <div className="flex flex-col lg:flex-row items-center lg:justify-between p-10 space-y-10 lg:space-y-0">
       {/* Image Section */}
-      <div className="lg:w-1/2 rounded-2xl overflow-hidden shadow-lg">
-        <img src="src/assets/group-of-doctors.png" alt="Group of Doctors" className="w-full h-auto object-cover rounded-xl shadow-md border border-gray-200" />
+      <div className="md:w-1/2 rounded-2xl overflow-hidden shadow-lg flex justify-center">
+        <img
+          src="src/assets/group-of-doctors.png"
+          alt="Group of Doctors"
+          className="w-full max-w-xl h-auto object-cover rounded-xl shadow-md border border-gray-200"
+        />
       </div>
 
       {/* Form Section */}
       <div className="lg:w-1/2 bg-white shadow-xl rounded-2xl p-8">
-        <h2 className="text-2xl font-bold mb-5 text-gray-700">Doctor Registration</h2>
+        <h2 className="text-2xl font-bold mb-5 text-gray-700">
+          Doctor Registration
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-gray-700 mb-2">Full Name:</label>
@@ -104,7 +118,7 @@ const DoctorSignup = () => {
             <label className="block text-gray-700 mb-2">Password:</label>
             <div className="flex items-center">
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
@@ -116,16 +130,18 @@ const DoctorSignup = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="ml-2 text-sm text-blue-600"
               >
-                {showPassword ? 'Hide' : 'Show'}
+                {showPassword ? "Hide" : "Show"}
               </button>
             </div>
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-2">Confirm Password:</label>
+            <label className="block text-gray-700 mb-2">
+              Confirm Password:
+            </label>
             <div className="flex items-center">
               <input
-                type={showConfirmPassword ? 'text' : 'password'}
+                type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
@@ -137,7 +153,7 @@ const DoctorSignup = () => {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="ml-2 text-sm text-blue-600"
               >
-                {showConfirmPassword ? 'Hide' : 'Show'}
+                {showConfirmPassword ? "Hide" : "Show"}
               </button>
             </div>
           </div>
@@ -169,7 +185,9 @@ const DoctorSignup = () => {
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-2">Experience (Years):</label>
+            <label className="block text-gray-700 mb-2">
+              Experience (Years):
+            </label>
             <input
               type="number"
               name="experience"

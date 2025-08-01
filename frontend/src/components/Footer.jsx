@@ -8,7 +8,7 @@ const Footer = () => {
 
         <div>
           {/* <img className='mb-5 w-40' src={assets.logo} alt="" /> */}
-          <h1 className='text-2xl font-bold text-primary cursor-pointer hover:text-blue-600'>Telemedicine</h1>
+          <h1 className='text-2xl font-bold text-primary cursor-pointer hover:text-blue-600'>Pet Connect</h1>
           <p className='w-full md:w-2/3 text-gray-600 leading-6'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
         </div>
 
