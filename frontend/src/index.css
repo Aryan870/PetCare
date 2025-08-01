@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -8,16 +8,20 @@
     font-family: Outfit;
 }
 
-.active hr {
-    @apply block
+body {
+    background-color: #ffffff;
 }
 
-@media (max-width:740px) {
-    .active  p{
-       @apply text-white bg-primary
-    }
+.active hr {
+  @apply block;
+}
+
+@media (max-width: 740px) {
+  .active p {
+    @apply text-white bg-primary;
+  }
 }
 
 ::-webkit-scrollbar {
-    @apply hidden
+  @apply hidden;
 }
