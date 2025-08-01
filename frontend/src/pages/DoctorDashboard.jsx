@@ -86,7 +86,8 @@ const DoctorDashboard = () => {
             {appointments.map((appointment) => (
               <li key={appointment._id} className="py-4 flex justify-between">
                 <div>
-                  <p><strong>Patient:</strong> {getPatientName(appointment.patientId)}</p>
+                  {/* <p><strong>Patient:</strong> {getPatientName(appointment.patientId)}</p> */}
+                  <p><strong>Patient:</strong> {appointment.patientId.name}</p>
                   <p><strong>Date:</strong> {appointment.date}</p>
                   <p><strong>Time:</strong> {appointment.time}</p>
                   <p><strong>Status:</strong> {appointment.status || "Pending"}</p>
