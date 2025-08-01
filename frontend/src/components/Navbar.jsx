@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 
@@ -7,6 +7,7 @@ const Navbar = () => {
   const [user, setUser] = useState(null);
   const [admin, setAdmin] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
 
   // ✅ Load user & admin details when component mounts
   useEffect(() => {
@@ -41,6 +42,18 @@ const Navbar = () => {
     window.location.reload(); // Refresh UI after logout
   };
 
+  // ✅ Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <div className="flex items-center justify-between text-sm py-4 mb-5 border-b border-gray-400">
       <h1
@@ -69,7 +82,7 @@ const Navbar = () => {
       <div className="flex items-center gap-4">
         {/* ✅ If Admin is Logged In */}
         {admin ? (
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <img
               className="w-8 h-8 rounded-full cursor-pointer"
               src={assets.profile_pic}
@@ -131,7 +144,7 @@ const Navbar = () => {
             )}
           </div>
         ) : user ? (
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <img
               className="w-8 h-8 rounded-full cursor-pointer"
               src={assets.profile_pic}

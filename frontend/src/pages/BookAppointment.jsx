@@ -163,6 +163,35 @@ const BookAppointment = () => {
       setIsLoading(false);
     }
   };
+
+  const handleBypassPayment = async () => {
+    if (!selectedDate || !selectedTime) {
+      alert("❌ Please select a valid date and time.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Bypass payment and directly book the appointment
+      const bookingResponse = await axios.post("http://localhost:5000/api/appointments/book", {
+        patientId: JSON.parse(localStorage.getItem("user"))._id,
+        doctorId: doctor._id,
+        date: selectedDate,
+        time: selectedTime,
+        isPaid: false, // Mark as not paid
+      });
+
+      alert("Appointment booked successfully (Payment Bypassed)!");
+      navigate("/patientdashboard");
+
+    } catch (error) {
+      console.error("❌ Booking failed:", error.response?.data || error.message);
+      alert("❌ Booking failed, please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
 
   return (
@@ -187,6 +216,10 @@ const BookAppointment = () => {
 
       <button onClick={handleConfirmBooking} disabled={!selectedDate || !selectedTime || isLoading} className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md">
         {isLoading ? "Processing..." : `Confirm & Pay ₹${doctor.fee}`}
+      </button>
+
+      <button onClick={handleBypassPayment} disabled={!selectedDate || !selectedTime || isLoading} className="mt-4 w-full bg-gray-500 text-white py-2 rounded-md">
+        Bypass Payment & Book
       </button>
     </div>
   );
