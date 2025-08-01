@@ -27,12 +27,13 @@ const DoctorDashboard = () => {
 
         try {
           const [appointmentsRes, patientsRes] = await Promise.all([
-            axios.get(`http://localhost:5000/api/appointments/doctor/${storedUser._id}`),
+            axios.get(`http://localhost:5000/api/appointments/doctors/${storedUser._id}`),
             axios.get("http://localhost:5000/api/admin/patients")
           ]);
 
           setAppointments(appointmentsRes.data);
           setPatients(patientsRes.data);
+          console.log("Patients data received in DoctorDashboard:", patientsRes.data);
         } catch (error) {
           console.error("Error fetching data:", error);
         } finally {
@@ -45,7 +46,9 @@ const DoctorDashboard = () => {
   }, []);
 
   const getPatientName = (patientId) => {
+    console.log("Searching for patientId in DoctorDashboard:", patientId);
     const patient = patients.find(p => p._id === patientId);
+    console.log("Found patient in DoctorDashboard:", patient);
     return patient ? patient.name : "Unknown Patient";
   };
 

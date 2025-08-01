@@ -19,11 +19,12 @@ const DoctorAppointments = () => {
 
       try {
         const [appointmentsRes, patientsRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/appointments/doctor/${doctor._id}`),
+          axios.get(`http://localhost:5000/api/appointments/doctors/${doctor._id}`),
           axios.get("http://localhost:5000/api/admin/patients"),
         ]);
         setAppointments(appointmentsRes.data);
         setPatients(patientsRes.data);
+        console.log("Patients data received:", patientsRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -35,7 +36,9 @@ const DoctorAppointments = () => {
   }, [navigate, doctor._id]);
 
   const getPatientName = (patientId) => {
+    console.log("Searching for patientId:", patientId);
     const patient = patients.find((p) => p._id === patientId);
+    console.log("Found patient:", patient);
     return patient ? patient.name : "Unknown Patient";
   };
 
@@ -54,7 +57,7 @@ const DoctorAppointments = () => {
               <p><strong>Date:</strong> {appointment.date} | <strong>Time:</strong> {appointment.time}</p>
               <button
                 className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-                onClick={() => navigate("/addprescription",{ state: { appointment } })}
+                onClick={() => navigate("/addprescription", { state: { appointment } })}
               >
                 Add Prescription
               </button>
