@@ -85,7 +85,7 @@ const PatientDashboard = () => {
 
               <div className="mt-2">
                 <button 
-                  className="w-full p-2 bg-blue-500 text-white rounded-md"
+                  className="w-full p-2 bg-primary text-white rounded-md"
                   onClick={() => handleBookAppointment(doctor)}
                 >
                   Book Appointment
