@@ -7,35 +7,49 @@ const DoctorDashboard = () => {
   const [doctor, setDoctor] = useState(null);
   const [appointments, setAppointments] = useState([]);
   const [parsedAvailability, setParsedAvailability] = useState([]);
+  const [patients, setPatients] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // ✅ Get logged-in doctor from localStorage
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    console.log("Stored User in DoctorDashboard:", storedUser);
+    const fetchData = async () => {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (storedUser && storedUser.role === "doctor") {
+        setDoctor(storedUser);
 
-    if (storedUser && storedUser.role === "doctor") {
-      setDoctor(storedUser);
+        if (storedUser.timings) {
+          const availabilityArray = storedUser.timings.split('; ').map(slot => {
+            const [day, timeRange] = slot.split(': ');
+            const [startTime, endTime] = timeRange.split('-');
+            return { day, startTime, endTime };
+          });
+          setParsedAvailability(availabilityArray);
+        }
 
-      // Parse timings string into availability array
-      if (storedUser.timings) {
-        const availabilityArray = storedUser.timings.split('; ').map(slot => {
-          const [day, timeRange] = slot.split(': ');
-          const [startTime, endTime] = timeRange.split('-');
-          return { day, startTime, endTime };
-        });
-        setParsedAvailability(availabilityArray);
+        try {
+          const [appointmentsRes, patientsRes] = await Promise.all([
+            axios.get(`http://localhost:5000/api/appointments/doctor/${storedUser._id}`),
+            axios.get("http://localhost:5000/api/admin/patients")
+          ]);
+
+          setAppointments(appointmentsRes.data);
+          setPatients(patientsRes.data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        } finally {
+          setLoading(false);
+        }
       }
+    };
 
-      // ✅ Fetch doctor's appointments
-      axios
-        .get(`http://localhost:5000/api/appointments/doctors/${storedUser._id}`)
-        .then((response) => setAppointments(response.data))
-        .catch((error) => console.error("Error fetching appointments:", error));
-    }
+    fetchData();
   }, []);
- 
 
-  if (!doctor) return <div className="text-center p-4">Loading doctor details...</div>;
+  const getPatientName = (patientId) => {
+    const patient = patients.find(p => p._id === patientId);
+    return patient ? patient.name : "Unknown Patient";
+  };
+
+  if (loading) return <div className="text-center p-4">Loading doctor details...</div>;
 
   return (
     <div className="bg-gray-100 p-8 min-h-screen">
@@ -67,10 +81,9 @@ const DoctorDashboard = () => {
         {appointments.length > 0 ? (
           <ul className="divide-y divide-gray-200">
             {appointments.map((appointment) => (
-              <li key={appointment.id} className="py-4 flex justify-between">
+              <li key={appointment._id} className="py-4 flex justify-between">
                 <div>
-                  <p><strong>Appointment ID:</strong>{appointment.id}</p>
-                  <p><strong>Patient ID:</strong> {appointment.patientId}</p>
+                  <p><strong>Patient:</strong> {getPatientName(appointment.patientId)}</p>
                   <p><strong>Date:</strong> {appointment.date}</p>
                   <p><strong>Time:</strong> {appointment.time}</p>
                   <p><strong>Status:</strong> {appointment.status || "Pending"}</p>

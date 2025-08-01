@@ -8,59 +8,55 @@ const PatientDashboard = () => {
   const [doctors, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [prescriptions, setPrescriptions] = useState([]);
-  
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // ✅ Get logged-in patient from localStorage
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    console.log("Stored User in PatientDashboard:", storedUser);
+    const fetchData = async () => {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (!storedUser || storedUser.role !== "patient") {
+        alert("Unauthorized access. Redirecting...");
+        navigate("/login");
+        return;
+      }
 
-    if (!storedUser || storedUser.role !== "patient") {
-      alert("Unauthorized access. Redirecting...");
-      navigate("/login");
-      return;
-    }
+      setPatient(storedUser);
 
-    // ✅ Set patient data from localStorage
-    setPatient(storedUser);
+      try {
+        const doctorsRes = await axios.get("http://localhost:5000/api/admin/doctors");
+        setDoctors(doctorsRes.data);
 
-    // ✅ Fetch all available doctors
-    axios
-      .get("http://localhost:5000/api/admin/doctors")
-      .then((response) => {
-        setDoctors(response.data);
-        console.log("Doctors data:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching doctors:", error);
-      });
+        const [appointmentsRes, prescriptionsRes] = await Promise.all([
+          axios.get(`http://localhost:5000/api/appointments/patient/${storedUser._id}`),
+          axios.get(`http://localhost:5000/api/prescriptions/patient/${storedUser._id}`),
+        ]);
 
-    // ✅ Fetch patient's appointments
-    axios
-      .get(`http://localhost:5000/api/appointments/patient/${storedUser._id}`)
-      .then((response) => {
-        setAppointments(response.data);
-        console.log("Appointments data:", response.data);
-      })
-      .catch((error) => console.error("Error fetching appointments:", error));
+        setAppointments(appointmentsRes.data);
+        setPrescriptions(prescriptionsRes.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // ✅ Fetch patient's prescriptions
-    axios
-      .get(`http://localhost:5000/api/prescriptions/patient/${storedUser._id}`)
-      .then((response) => {
-        setPrescriptions(response.data);
-        console.log("Prescriptions data:", response.data);
-      })
-      .catch((error) => console.error("Error fetching prescriptions:", error));
-
-    
-}, [navigate]);
+    fetchData();
+  }, [navigate]);
 
   const handleBookAppointment = (doctor) => {
     navigate("/bookappointment", { state: { doctor } });
   };
 
-  if (!patient) return <div className="text-center p-4">Loading patient details...</div>;
+  const getDoctorName = (doctorId) => {
+    console.log("Looking for doctorId:", doctorId);
+    console.log("Doctors list:", doctors);
+    const doctor = doctors.find((doc) => {
+      console.log("Comparing with doctor _id:", doc._id);
+      return doc._id === doctorId || doc._id === doctorId?._id;
+    });
+    return doctor ? doctor.name : "Unknown Doctor";
+  };
+
+  if (loading) return <div className="text-center p-4">Loading patient details...</div>;
 
   return (
     <div className="bg-gray-100 p-8 min-h-screen">
@@ -107,7 +103,7 @@ const PatientDashboard = () => {
           <ul className="divide-y divide-gray-200">
             {appointments.map((appointment) => (
               <li key={appointment._id} className="py-4">
-                <p><strong>Doctor:</strong> {appointment.doctorId}</p>
+                <p><strong>Doctor:</strong> {getDoctorName(appointment.doctorId)}</p>
                 <p><strong>Date:</strong> {appointment.date}</p>
                 <p><strong>Time:</strong> {appointment.time}</p>
                 <p><strong>Status:</strong> {appointment.status}</p>
@@ -126,7 +122,7 @@ const PatientDashboard = () => {
           <ul className="divide-y divide-gray-200">
             {prescriptions.map((prescription) => (
               <li key={prescription._id} className="py-4">
-                <p><strong>Doctor:</strong> {prescription.doctorId}</p>
+                <p><strong>Doctor:</strong> {getDoctorName(prescription.doctorId)}</p>
                 <p><strong>Date:</strong> {prescription.date}</p>
                 <p><strong>Medication:</strong> {prescription.medication}</p>
                 <p><strong>Dosage:</strong> {prescription.dosage}</p>
