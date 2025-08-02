@@ -56,12 +56,12 @@ const Navbar = () => {
 
   return (
     <div className="flex items-center justify-between text-sm py-4 mb-5 border-b border-gray-400">
-      <h1
-        onClick={() => navigate("/")}
-        className="text-2xl font-bold text-primary cursor-pointer hover:text-blue-600"
-      >
-        Pet Connect 🐾
-      </h1>
+        <h1
+          onClick={() => navigate("/")}
+          className="text-2xl font-bold text-primary cursor-pointer hover:text-blue-600"
+        >
+          Pet Connect 🐾
+        </h1>
 
       {/* Desktop Navigation Links */}
       <ul className="md:flex items-start gap-5 font-medium hidden">

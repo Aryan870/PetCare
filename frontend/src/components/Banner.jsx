@@ -12,7 +12,7 @@ const Banner = () => {
         <div className="flex-1 py-8 sm:py-10 md:py-16 lg:py-24 lg:pl-5">
           <div className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-semibold text-white">
             <p>Start Your Pet's Wellness Journey</p>
-            <p className="mt-4">With Our Trusted Doctors</p>
+            <p className="mt-4">With Our Compassionate Veterinary Care</p>
           </div>
           <button
             onClick={() => {
@@ -21,7 +21,7 @@ const Banner = () => {
             }}
             className="bg-white text-sm sm:text-base text-gray-600 px-8 py-3 rounded-full mt-6 hover:scale-105 transition-all "
           >
-            Create account
+            Create Account
           </button>
         </div>
 
@@ -30,7 +30,7 @@ const Banner = () => {
           <img
             className="w-full absolute bottom-0 right-0 max-w-md"
             src={assets.appointment_img}
-            alt=""
+            alt="Veterinary appointment"
           />
         </div>
       </div>
