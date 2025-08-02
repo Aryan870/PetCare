@@ -1,5 +1,8 @@
 import React from "react";
-import { assets } from "../assets/assets";
+import doc1 from "../images/doc1.png";
+import doc2 from "../images/doc2.png";
+import doc3 from "../images/doc3.png";
+import doc4 from "../images/doc4.png";
 
 const PetServices = () => {
   const services = [
@@ -7,25 +10,25 @@ const PetServices = () => {
       title: "Wellness Exams",
       description:
         "Comprehensive health checkups to keep your pet in optimal condition.",
-      icon: assets.doc1, // Using existing doctor image
+      icon: doc1, // Using existing doctor image
     },
     {
       title: "Vaccinations",
       description:
         "Protection against common diseases through up-to-date immunizations.",
-      icon: assets.doc2,
+      icon: doc2,
     },
     {
       title: "Dental Care",
       description:
         "Professional cleaning and dental health maintenance for your pet.",
-      icon: assets.doc3,
+      icon: doc3,
     },
     {
-      title: "Emergency Care",
+      title: "Grooming",
       description:
-        "Immediate attention for urgent medical situations and injuries.",
-      icon: assets.doc4,
+        "Essential care for your pet’s hygiene, health, and overall comfort.",
+      icon: doc4,
     },
   ];
 
