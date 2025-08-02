@@ -5,7 +5,7 @@ const prescriptionSchema = new mongoose.Schema({
     doctorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     medicines: [{ name: String, dosage: String, frequency: String }],
-    notes: { type: String },
+    notes: { type: String, required: true },
 });
 
 const Prescription = mongoose.model('Prescription', prescriptionSchema);

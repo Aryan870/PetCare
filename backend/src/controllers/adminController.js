@@ -40,6 +40,18 @@ exports.getAllPatients = async (req, res) => {
     }
 };
 
+exports.getPatientById = async (req, res) => {
+    try {
+        const patient = await User.findById(req.params.id);
+        if (!patient) {
+            return res.status(404).send({ message: 'Patient not found' });
+        }
+        res.status(200).send(patient);
+    } catch (error) {
+        res.status(400).send({ error: error.message });
+    }
+};
+
 exports.deleteUser = async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id);

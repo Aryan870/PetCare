@@ -26,10 +26,10 @@ const AddPrescription = () => {
     }
   
     try {
-      const response = await axios.post("http://localhost:5000/api/prescriptions/", {
-        appointmentId: appointment?.id,
+      await axios.post('http://localhost:5000/api/prescriptions', {
+        appointmentId: appointment?._id,
         doctorId: appointment?.doctorId,
-        patientId: appointment?.patientId,
+        patientId: appointment?.patientId._id, // Correctly access the nested _id
         prescriptionText,
       });
   
@@ -49,7 +49,7 @@ const AddPrescription = () => {
       <h2 className="text-2xl font-bold mb-4">Add Prescription</h2>
 
       <p className="mb-4">
-        <strong>Patient:</strong> {appointment.patientName}
+        <strong>Patient:</strong> {appointment.patientId.name} 
       </p>
 
       <form onSubmit={handleSubmit}>

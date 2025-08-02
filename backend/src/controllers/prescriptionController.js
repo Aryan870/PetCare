@@ -2,7 +2,13 @@ const Prescription = require('../models/Prescription');
 
 exports.createPrescription = async (req, res) => {
     try {
-        const prescription = new Prescription(req.body);
+        const { appointmentId, doctorId, patientId, prescriptionText } = req.body;
+        const prescription = new Prescription({
+            appointmentId,
+            doctorId,
+            patientId,
+            notes: prescriptionText,
+        });
         await prescription.save();
         res.status(201).send({ message: 'Prescription created successfully' });
     } catch (error) {
