@@ -12,7 +12,7 @@ exports.createBilling = async (req, res) => {
 
 exports.getAllBillings = async (req, res) => {
     try {
-        const billings = await Billing.find().populate('appointmentId').populate('patientId');
+        const billings = await Billing.find().populate('appointmentId').populate('patientId').populate('doctorId');
         res.status(200).send(billings);
     } catch (error) {
         res.status(400).send({ error: error.message });

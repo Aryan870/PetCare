@@ -13,6 +13,7 @@ const PatientSignUp = () => {
     address: "",
     phone: "",
     dob: "",
+    age: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -148,19 +149,6 @@ const PatientSignUp = () => {
             </div>
             <div>
               <label className="block text-gray-700 mb-2 font-semibold">
-                Address:
-              </label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 mb-2 font-semibold">
                 Phone:
               </label>
               <input
@@ -174,12 +162,51 @@ const PatientSignUp = () => {
             </div>
             <div>
               <label className="block text-gray-700 mb-2 font-semibold">
-                Date of Birth:
+                Address:
               </label>
               <input
-                type="date"
-                name="dob"
-                value={formData.dob}
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 mb-2 font-semibold">
+                Breed:
+              </label>
+              <input
+                type="text"
+                name="address"
+                value={formData.breed}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+              />
+            </div>
+             <div>
+              <label className="block text-gray-700 mb-2 font-semibold">
+                Age:
+              </label>
+              <input
+                type="text"
+                name="age"
+                value={formData.age}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+              />
+            </div>
+             <div>
+              <label className="block text-gray-700 mb-2 font-semibold">
+                Medical History:
+              </label>
+              <input
+                type="text"
+                name="address"
+                value={formData.medicalHistory}
                 onChange={handleChange}
                 required
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"

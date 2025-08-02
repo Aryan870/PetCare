@@ -11,6 +11,7 @@ const AdminRegister = () => {
     adminCode: "",
   });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
@@ -21,18 +22,21 @@ const AdminRegister = () => {
     e.preventDefault();
     setError("");
     setSuccessMessage("");
+    setIsLoading(true);
 
     try {
       await axios.post("http://localhost:5000/api/admin/register", {
         ...adminData,
-        role: "ADMIN",
+        role: "admin",
       });
 
       setSuccessMessage("✅ Registration successful! Redirecting to login...");
       setTimeout(() => navigate("/admin/login"), 2000); // Redirect after 2 seconds
     } catch (error) {
       console.error("Registration failed:", error.response?.data || error.message);
-      setError(error.response?.data || "Registration failed. Please try again.");
+      setError(error.response?.data?.message || "Registration failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -93,8 +97,12 @@ const AdminRegister = () => {
             />
           </div>
 
-          <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded-md">
-            Register
+          <button 
+            type="submit" 
+            className="w-full p-2 bg-blue-500 text-white rounded-md disabled:bg-gray-400"
+            disabled={isLoading}
+          >
+            {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
 

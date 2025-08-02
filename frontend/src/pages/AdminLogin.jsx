@@ -7,6 +7,8 @@ const AdminLogin = () => {
   const [adminData, setAdminData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleChange = (e) => {
     setAdminData({ ...adminData, [e.target.name]: e.target.value });
   };
@@ -14,16 +16,19 @@ const AdminLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
       const response = await axios.post("http://localhost:5000/api/admin/login", adminData, { withCredentials: true });
       
-      localStorage.setItem("admin", JSON.stringify(response.data.admin));
+      localStorage.setItem("admin", JSON.stringify(response.data));
       alert("Admin Login Successful!");
       navigate("/admin/dashboard"); // Redirect after successful login
     } catch (error) {
       console.error("Login failed:", error.response?.data || error.message);
-      setError(error.response?.data || "Login failed. Please try again.");
+      setError(error.response?.data?.message || "Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -59,8 +64,12 @@ const AdminLogin = () => {
             />
           </div>
 
-          <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded-md">
-            Login
+          <button 
+            type="submit" 
+            className="w-full p-2 bg-blue-500 text-white rounded-md disabled:bg-gray-400"
+            disabled={isLoading}
+          >
+            {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
 

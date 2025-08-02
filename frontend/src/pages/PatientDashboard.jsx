@@ -67,10 +67,11 @@ const PatientDashboard = () => {
         <h2 className="text-xl font-semibold mb-3 text-gray-800">Patient Details</h2>
         <p className="text-gray-600"><strong>Name:</strong> {patient.name}</p>
         <p className="text-gray-600"><strong>Email:</strong> {patient.email}</p>
-        <p className="text-gray-600"><strong>Address:</strong> {patient.address}</p>
         <p className="text-gray-600"><strong>Phone:</strong> {patient.phone}</p>
-        <p className="text-gray-600"><strong>Date of Birth:</strong> {patient.dob}</p>
-        
+        <p className="text-gray-600"><strong>Age:</strong> {patient.age}</p>
+        <p className="text-gray-600"><strong>Breed:</strong> {patient.breed}</p>
+        <p className="text-gray-600"><strong>Medical History:</strong> {patient.medicalHistory}</p>
+        <p className="text-gray-600"><strong>Address:</strong> {patient.address}</p>
       </div>
 
       {/* Available Doctors */}

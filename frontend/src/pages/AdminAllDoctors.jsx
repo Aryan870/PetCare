@@ -23,10 +23,11 @@ const AdminAllDoctors = () => {
     if (window.confirm("Are you sure you want to delete this doctor?")) {
       try {
         await axios.delete(`http://localhost:5000/api/admin/users/${id}`);
-        setDoctors(doctors.filter((doctor) => doctor.id !== id));
+        setDoctors(doctors.filter((doctor) => doctor._id !== id));
         alert("Doctor deleted successfully!");
       } catch (error) {
         console.error("Error deleting doctor:", error);
+        alert("Error deleting doctor.");
       }
     }
   };
@@ -39,10 +40,8 @@ const AdminAllDoctors = () => {
         <table className="w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
-              <th className="border p-2">ID</th>
               <th className="border p-2">Name</th>
               <th className="border p-2">Email</th>
-              <th className="border p-2">Password</th>
               <th className="border p-2">Specialization</th>
               <th className="border p-2">Fees</th>
               <th className="border p-2">Actions</th>
@@ -50,22 +49,20 @@ const AdminAllDoctors = () => {
           </thead>
           <tbody>
             {doctors.map((doctor) => (
-              <tr key={doctor.id} className="text-center">
-                <td className="border p-2">{doctor.id}</td>
+              <tr key={doctor._id} className="text-center">
                 <td className="border p-2">{doctor.name}</td>
                 <td className="border p-2">{doctor.email}</td>
-                <td className="border p-2">{doctor.password}</td>
-                <td className="border p-2">{doctor.specialization}</td>
-                <td className="border p-2">₹{doctor.fees}</td>
+                <td className="border p-2">{doctor.speciality}</td>
+                <td className="border p-2">₹{doctor.fee}</td>
                 <td className="border p-2">
                   <button
-                    onClick={() => navigate(`/admin/edit-doctor/${doctor.id}`)}
+                    onClick={() => navigate(`/admin/edit-doctor/${doctor._id}`)}
                     className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 mr-2"
                   >
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(doctor.id)}
+                    onClick={() => handleDelete(doctor._id)}
                     className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
                   >
                     Delete

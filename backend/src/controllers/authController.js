@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 exports.register = async (req, res) => {
     try {
@@ -12,8 +13,12 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const user = await User.findOne({ email: req.body.email, password: req.body.password });
+        const user = await User.findOne({ email: req.body.email });
         if (!user) {
+            return res.status(404).send({ message: 'Invalid credentials' });
+        }
+        const isMatch = await bcrypt.compare(req.body.password, user.password);
+        if (!isMatch) {
             return res.status(404).send({ message: 'Invalid credentials' });
         }
         res.status(200).send(user);
@@ -36,7 +41,13 @@ exports.getUserById = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        const { password, ...updatedData } = req.body;
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            updatedData.password = await bcrypt.hash(password, salt);
+        }
+
+        const user = await User.findByIdAndUpdate(req.params.id, updatedData, { new: true, runValidators: true });
         if (!user) {
             return res.status(404).send({ message: 'User not found' });
         }

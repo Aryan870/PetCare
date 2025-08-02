@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -11,7 +12,18 @@ const userSchema = new mongoose.Schema({
     timings: { type: String, required: function() { return this.role === 'doctor'; } },
     address: { type: String, required: function() { return this.role === 'patient'; } },
     phone: { type: String, required: function() { return this.role === 'patient'; } },
-    dob: { type: Date, required: function() { return this.role === 'patient'; } },
+    breed: { type: String, required: function() { return this.role === 'patient'; } }, 
+    age: { type: Number, required: function() { return this.role === 'patient'; } },
+    medicalHistory: { type: String, required: function() { return this.role === 'patient'; } },
+});
+
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) {
+        return next();
+    }
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
 });
 
 const User = mongoose.model('User', userSchema);

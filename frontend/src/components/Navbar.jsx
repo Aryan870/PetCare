@@ -169,18 +169,6 @@ const Navbar = () => {
                     >
                       My Dashboard
                     </p>
-                    <p
-                      onClick={() => navigate("/myappointments")}
-                      className="cursor-pointer hover:text-blue-600"
-                    >
-                      My Appointments
-                    </p>
-                    <p
-                      onClick={() => navigate("/mybillings")}
-                      className="hover:text-blue-600 cursor-pointer"
-                    >
-                      My Billings
-                    </p>
                   </>
                 )}
 
