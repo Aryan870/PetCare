@@ -108,7 +108,7 @@ const MyProfile = () => {
           </>
         )}
 
-        <button type="button" onClick={handleUpdate} className="w-full bg-blue-500 text-white py-2 rounded-md">Update Profile</button>
+        <button type="button" onClick={handleUpdate} className="w-full bg-primary text-white py-2 rounded-md">Update Profile</button>
         <button type="button" onClick={handleDeleteAccount} className="w-full bg-red-500 text-white py-2 rounded-md mt-2">Delete Account</button>
       </form>
     </div>

@@ -76,11 +76,11 @@ export const specialityData = [
         image: Dentistry
     },
     {
-        speciality: 'Radiology/Diagnostic Imaging',
+        speciality: 'Radiology',
         image: Radiology
     },
     {
-        speciality: 'Emergency and Critical Care',
+        speciality: 'Emergency',
         image: Emergency
     },
 ]

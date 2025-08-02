@@ -10,7 +10,7 @@ const Footer = () => {
           <h1 className="text-2xl font-bold text-primary cursor-pointer hover:text-blue-600">
             Pet Connect
           </h1>
-          <p className="w-full md:w-2/3 text-gray-600 leading-6">.</p>
+          <p className="w-full md:w-2/3 text-gray-600 leading-relaxed">PetConnect Clinic offers compassionate, accessible, and advanced veterinary care, making pet health management stress-free. We prioritize the bond between pets and families, simplifying everything from appointments to health history access. Our dedicated team uses the latest advancements to provide excellent care throughout your pet's life, from first check-ups to senior years. We aim to be your trusted partner, setting a new standard in veterinary medicine and enabling pets to live longer, healthier, happier lives through proactive wellness.</p>
         </div>
 
         <div>
