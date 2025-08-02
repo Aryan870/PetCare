@@ -147,7 +147,7 @@ export const doctors = [
   },
   {
     _id: "doc5",
-    name: "Dr. Jennifer Garcia",
+    name: "Dr. Andrea",
     image: doc5,
     speciality: "Radiology/Diagnostic Imaging",
     degree: "MBBS",
@@ -162,9 +162,9 @@ export const doctors = [
   },
   {
     _id: "doc6",
-    name: "Dr. Andrew Williams",
+    name: "Dr. Suraj Kumar",
     image: doc6,
-    speciality: "Radiology/Diagnostic Imaging",
+    speciality: "Emergency care",
     degree: "MBBS",
     experience: "4 Years",
     about:
@@ -177,7 +177,7 @@ export const doctors = [
   },
   {
     _id: "doc7",
-    name: "Dr. Christopher Davis",
+    name: "Dr. Jagan",
     image: doc7,
     speciality: "Surgery",
     degree: "MBBS",
@@ -192,7 +192,7 @@ export const doctors = [
   },
   {
     _id: "doc8",
-    name: "Dr. Timothy White",
+    name: "Dr. Arunav Kumar",
     image: doc8,
     speciality: "Ophthalmology",
     degree: "MBBS",
@@ -207,8 +207,8 @@ export const doctors = [
   },
   {
     _id: "doc9",
-    name: "Dr. Ava Mitchell",
-    image: doc9,
+    name: "Dr. Aryan",
+    image: doc14,
     speciality: "Dermatologist",
     degree: "MBBS",
     experience: "1 Years",
@@ -222,7 +222,7 @@ export const doctors = [
   },
   {
     _id: "doc10",
-    name: "Dr. Jeffrey King",
+    name: "Dr. Aditya",
     image: doc10,
     speciality: "Dentistry",
     degree: "MBBS",
