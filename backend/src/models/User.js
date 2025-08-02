@@ -14,7 +14,8 @@ const userSchema = new mongoose.Schema({
     phone: { type: String, required: function() { return this.role === 'patient'; } },
     breed: { type: String, required: function() { return this.role === 'patient'; } }, 
     age: { type: Number, required: function() { return this.role === 'patient'; } },
-    medicalHistory: { type: String, required: function() { return this.role === 'patient'; } },
+    about: { type: String, required: function() { return this.role === 'doctor'; } },
+    
 });
 
 userSchema.pre('save', async function (next) {

@@ -12,8 +12,9 @@ const PatientSignUp = () => {
     role: "patient",
     address: "",
     phone: "",
-    dob: "",
     age: "",
+    breed: "",
+    medicalHistory: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -179,7 +180,7 @@ const PatientSignUp = () => {
               </label>
               <input
                 type="text"
-                name="address"
+                name="breed"
                 value={formData.breed}
                 onChange={handleChange}
                 required
@@ -205,7 +206,7 @@ const PatientSignUp = () => {
               </label>
               <input
                 type="text"
-                name="address"
+                name="medicalHistory"
                 value={formData.medicalHistory}
                 onChange={handleChange}
                 required
