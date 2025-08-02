@@ -9,8 +9,11 @@ const EditDoctor = () => {
     name: "",
     email: "",
     password: "",
-    specialization: "",
-    fees: "",
+    speciality: "",
+    fee: "",
+    timings: "",
+    experience: "",
+    about: "",
   });
 
   useEffect(() => {
@@ -33,7 +36,11 @@ const EditDoctor = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/auth/${id}`, doctor);
+      const doctorToUpdate = { ...doctor };
+      if (doctorToUpdate.password === "") {
+        delete doctorToUpdate.password;
+      }
+      await axios.put(`http://localhost:5000/api/auth/${id}`, doctorToUpdate);
       alert("Doctor updated successfully!");
       navigate("/admin/doctors");
     } catch (error) {
@@ -60,17 +67,32 @@ const EditDoctor = () => {
 
           <div className="mb-4">
             <label className="block font-medium">Password:</label>
-            <input type="text" name="password" placeholder="New Password" onChange={handleChange} className="w-full p-2 border rounded-md" required />
+            <input type="text" name="password" placeholder="New Password" onChange={handleChange} className="w-full p-2 border rounded-md" />
           </div>
 
           <div className="mb-4">
             <label className="block font-medium">Specialization:</label>
-            <input type="text" name="specialization" value={doctor.specialization} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+            <input type="text" name="speciality" value={doctor.speciality} onChange={handleChange} className="w-full p-2 border rounded-md" required />
           </div>
 
           <div className="mb-4">
             <label className="block font-medium">Fees:</label>
-            <input type="number" name="fees" value={doctor.fees} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+            <input type="number" name="fee" value={doctor.fee} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+          </div>
+
+          <div className="mb-4">
+            <label className="block font-medium">Timings:</label>
+            <input type="text" name="timings" value={doctor.timings} onChange={handleChange} className="w-full p-2 border rounded-md" />
+          </div>
+
+          <div className="mb-4">
+            <label className="block font-medium">Experience:</label>
+            <input type="text" name="experience" value={doctor.experience} onChange={handleChange} className="w-full p-2 border rounded-md" />
+          </div>
+
+          <div className="mb-4">
+            <label className="block font-medium">About:</label>
+            <textarea name="about" value={doctor.about} onChange={handleChange} className="w-full p-2 border rounded-md"></textarea>
           </div>
 
           <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded-md">

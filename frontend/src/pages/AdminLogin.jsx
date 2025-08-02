@@ -19,7 +19,7 @@ const AdminLogin = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/admin/login", adminData, { withCredentials: true });
+      const response = await axios.post("http://localhost:5000/api/auth/login", adminData, { withCredentials: true });
       
       localStorage.setItem("admin", JSON.stringify(response.data));
       alert("Admin Login Successful!");

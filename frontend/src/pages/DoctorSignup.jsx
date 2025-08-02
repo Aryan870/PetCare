@@ -15,6 +15,7 @@ const DoctorSignup = () => {
     experience: "",
     timings: "",
     availability: [{ day: "", startTime: "", endTime: "" }],
+    about: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -254,6 +255,18 @@ const DoctorSignup = () => {
           >
             Add Availability
           </button>
+
+          <div>
+            <label className="block text-gray-700 mb-2">About:</label>
+            <input
+              type="text"
+              name="about"
+              value={formData.about}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+            />
+          </div>
 
           <button
             type="submit"

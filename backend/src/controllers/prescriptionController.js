@@ -2,12 +2,13 @@ const Prescription = require('../models/Prescription');
 
 exports.createPrescription = async (req, res) => {
     try {
-        const { appointmentId, doctorId, patientId, prescriptionText } = req.body;
+        const { appointmentId, doctorId, patientId, medicines, notes } = req.body;
         const prescription = new Prescription({
             appointmentId,
             doctorId,
             patientId,
-            notes: prescriptionText,
+            medicines,
+            notes,
         });
         await prescription.save();
         res.status(201).send({ message: 'Prescription created successfully' });
@@ -73,6 +74,15 @@ exports.downloadPrescription = async (req, res) => {
 exports.getPrescriptionsByPatient = async (req, res) => {
     try {
         const prescriptions = await Prescription.find({ patientId: req.params.id }).populate('appointmentId').populate('doctorId').populate('patientId');
+        res.status(200).send(prescriptions);
+    } catch (error) {
+        res.status(400).send({ error: error.message });
+    }
+};
+
+exports.getPrescriptionsByDoctor = async (req, res) => {
+    try {
+        const prescriptions = await Prescription.find({ doctorId: req.params.id }).populate('appointmentId').populate('patientId');
         res.status(200).send(prescriptions);
     } catch (error) {
         res.status(400).send({ error: error.message });

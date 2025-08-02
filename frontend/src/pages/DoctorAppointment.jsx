@@ -46,16 +46,19 @@ const DoctorAppointment = () => {
       <h2 className="text-2xl font-bold mb-4 text-center">My Appointments</h2>
       {appointments.length > 0 ? (
         <ul className="divide-y divide-gray-200">
-          {appointments.map((appointment) => (
+          {appointments.filter(appointment => appointment.status !== 'completed').map((appointment) => (
             <li key={appointment._id} className="p-4 bg-white rounded-md shadow mb-3">
               <p><strong>Patient:</strong> {appointment.patientId.name}</p>
               <p><strong>Date:</strong> {appointment.date} | <strong>Time:</strong> {appointment.time}</p>
-              <button
-                className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-                onClick={() => handleAddPrescription(appointment)}
-              >
-                Add Prescription
-              </button>
+              <p><strong>Status:</strong> {appointment.status}</p>
+              {appointment.status !== 'completed' && (
+                <button
+                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md"
+                  onClick={() => handleAddPrescription(appointment)}
+                >
+                  Add Prescription
+                </button>
+              )}
             </li>
           ))}
         </ul>
