@@ -6,6 +6,7 @@ const DoctorDashboard = () => {
   const navigate = useNavigate();
   const [doctor, setDoctor] = useState(null);
   const [appointments, setAppointments] = useState([]);
+  const [prescriptions, setPrescriptions] = useState([]);
   const [parsedAvailability, setParsedAvailability] = useState([]);
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,14 +27,17 @@ const DoctorDashboard = () => {
         }
 
         try {
-          const [appointmentsRes, patientsRes] = await Promise.all([
+          const [appointmentsRes, patientsRes, prescriptionsRes] = await Promise.all([
             axios.get(`http://localhost:5000/api/appointments/doctors/${storedUser._id}`),
-            axios.get("http://localhost:5000/api/admin/patients")
+            axios.get("http://localhost:5000/api/admin/patients"),
+            axios.get(`http://localhost:5000/api/prescriptions/doctor/${storedUser._id}`)
           ]);
 
           setAppointments(appointmentsRes.data);
           setPatients(patientsRes.data);
+          setPrescriptions(prescriptionsRes.data);
           console.log("Patients data received in DoctorDashboard:", patientsRes.data);
+          console.log("Prescriptions data received in DoctorDashboard:", prescriptionsRes.data);
         } catch (error) {
           console.error("Error fetching data:", error);
         } finally {
@@ -50,6 +54,11 @@ const DoctorDashboard = () => {
     const patient = patients.find(p => p._id === patientId);
     console.log("Found patient in DoctorDashboard:", patient);
     return patient ? patient.name : "Unknown Patient";
+  };
+
+  const getAppointmentDate = (appointmentId) => {
+    const appointment = appointments.find(app => app._id === appointmentId);
+    return appointment ? appointment.date : 'N/A';
   };
 
   if (loading) return <div className="text-center p-4">Loading doctor details...</div>;
@@ -80,14 +89,13 @@ const DoctorDashboard = () => {
       </div>
 
       {/* ✅ Appointments Section */}
-      <div className="bg-white shadow-lg rounded-2xl p-6">
+      <div className="bg-white shadow-lg rounded-2xl p-6 mb-8">
         <h2 className="text-xl font-semibold mb-3 text-gray-800">Appointments</h2>
         {appointments.length > 0 ? (
           <ul className="divide-y divide-gray-200">
             {appointments.map((appointment) => (
               <li key={appointment._id} className="py-4 flex justify-between">
                 <div>
-                  {/* <p><strong>Patient:</strong> {getPatientName(appointment.patientId)}</p> */}
                   <p><strong>Patient:</strong> {appointment.patientId.name}</p>
                   <p><strong>Date:</strong> {appointment.date}</p>
                   <p><strong>Time:</strong> {appointment.time}</p>
@@ -108,6 +116,34 @@ const DoctorDashboard = () => {
           </ul>
         ) : (
           <p className="text-gray-600">No appointments yet.</p>
+        )}
+      </div>
+
+      {/* Prescriptions Section */}
+      <div className="bg-white shadow-lg rounded-2xl p-6">
+        <h2 className="text-xl font-semibold mb-3 text-gray-800">Prescriptions</h2>
+        {prescriptions.length > 0 ? (
+          <ul className="divide-y divide-gray-200">
+            {prescriptions.map((prescription) => (
+              <li key={prescription._id} className="py-4">
+                <p><strong>Patient:</strong> {prescription.patientId.name}</p>
+                <p><strong>Appointment Date:</strong> {getAppointmentDate(prescription.appointmentId)}</p>
+                <p><strong>Notes:</strong> {prescription.notes}</p>
+                <p className="font-semibold mt-2">Medicines:</p>
+                {prescription.medicines && prescription.medicines.length > 0 ? (
+                  <ul className="list-disc list-inside ml-4">
+                    {prescription.medicines.map((med, idx) => (
+                      <li key={idx}>{med.name} - {med.dosage} ({med.frequency})</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-600 ml-4">No medicines prescribed.</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-600">No prescriptions found.</p>
         )}
       </div>
     </div>

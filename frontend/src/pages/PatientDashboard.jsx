@@ -124,9 +124,18 @@ const PatientDashboard = () => {
             {prescriptions.map((prescription) => (
               <li key={prescription._id} className="py-4">
                 <p><strong>Doctor:</strong> {getDoctorName(prescription.doctorId)}</p>
-                <p><strong>Date:</strong> {prescription.date}</p>
-                <p><strong>Medication:</strong> {prescription.medication}</p>
-                <p><strong>Dosage:</strong> {prescription.dosage}</p>
+                <p><strong>Date:</strong> {prescription.appointmentId?.date || 'N/A'}</p>
+                <p><strong>Notes:</strong> {prescription.notes}</p>
+                <p className="font-semibold mt-2">Medicines:</p>
+                {prescription.medicines && prescription.medicines.length > 0 ? (
+                  <ul className="list-disc list-inside ml-4">
+                    {prescription.medicines.map((med, idx) => (
+                      <li key={idx}>{med.name} - {med.dosage} ({med.frequency})</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-600 ml-4">No medicines prescribed.</p>
+                )}
               </li>
             ))}
           </ul>

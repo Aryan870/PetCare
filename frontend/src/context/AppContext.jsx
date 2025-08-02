@@ -5,7 +5,7 @@ export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
   const [doctors, setDoctors] = useState([]);
-  const currencySymbol = '$';
+  const currencySymbol = '₹';
 
   const fetchDoctors = async () => {
     try {

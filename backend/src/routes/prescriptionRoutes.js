@@ -8,6 +8,7 @@ router.put('/:id', prescriptionController.updatePrescription);
 router.delete('/:id', prescriptionController.deletePrescription);
 router.get('/:id/download', prescriptionController.downloadPrescription);
 router.get('/patient/:id', prescriptionController.getPrescriptionsByPatient);
+router.get('/doctor/:id', prescriptionController.getPrescriptionsByDoctor);
 
 
 module.exports = router;

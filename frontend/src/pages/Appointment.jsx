@@ -265,7 +265,7 @@ const Appointment = () => {
       </select>
 
       <button onClick={handleConfirmBooking} disabled={!selectedDate || !selectedTime || isLoading} className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md">
-        {isLoading ? "Processing..." : `Confirm & Pay ₹${docInfo.fee}`}
+        {isLoading ? "Processing..." : `Confirm & Pay ${currencySymbol}${docInfo.fee}`}
       </button>
 
       <button onClick={handleBypassPayment} disabled={!selectedDate || !selectedTime || isLoading} className="mt-4 w-full bg-gray-500 text-white py-2 rounded-md">
