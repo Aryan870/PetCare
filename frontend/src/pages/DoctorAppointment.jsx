@@ -52,12 +52,20 @@ const DoctorAppointment = () => {
               <p><strong>Date:</strong> {appointment.date} | <strong>Time:</strong> {appointment.time}</p>
               <p><strong>Status:</strong> {appointment.status}</p>
               {appointment.status !== 'completed' && (
-                <button
-                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-                  onClick={() => handleAddPrescription(appointment)}
-                >
-                  Add Prescription
-                </button>
+                <div className="flex space-x-2 mt-2">
+                  <button
+                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                    onClick={() => handleAddPrescription(appointment)}
+                  >
+                    Add Prescription
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-green-500 text-white rounded-md"
+                    onClick={() => navigate(`/chat/${appointment._id}/${doctor._id}/${appointment.patientId._id}`)}
+                  >
+                    Chat
+                  </button>
+                </div>
               )}
             </li>
           ))}

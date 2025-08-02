@@ -35,6 +35,7 @@ import AdminAllPrescriptions from './pages/AdminAllPrescriptions'
 import EditPatient from './pages/EditPatient'
 import EditDoctor from './pages/EditDoctor'
 import AdminAllBillings from './pages/AdminAllBillings'
+import ChatPage from './pages/ChatPage'
 
 
 const App = () => {
@@ -76,6 +77,7 @@ const App = () => {
         <Route path='/admin/edit-patient/:id' element={<EditPatient/>}/>
         <Route path="/admin/edit-doctor/:id" element={<EditDoctor/>} />
         <Route path="/admin/billings" element={<AdminAllBillings />} />
+        <Route path="/chat/:appointmentId/:senderId/:receiverId" element={<ChatPage />} />
 
 
       </Routes>

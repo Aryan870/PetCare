@@ -108,6 +108,14 @@ const PatientDashboard = () => {
                 <p><strong>Date:</strong> {appointment.date}</p>
                 <p><strong>Time:</strong> {appointment.time}</p>
                 <p><strong>Status:</strong> {appointment.status}</p>
+                {appointment.status !== 'completed' && (
+                  <button
+                    className="mt-2 px-4 py-2 bg-green-500 text-white rounded-md"
+                    onClick={() => navigate(`/chat/${appointment._id}/${patient._id}/${appointment.doctorId._id}`)}
+                  >
+                    Chat
+                  </button>
+                )}
               </li>
             ))}
           </ul>

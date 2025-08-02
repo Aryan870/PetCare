@@ -26,6 +26,7 @@ const prescriptionRoutes = require('./routes/prescriptionRoutes');
 const billingRoutes = require('./routes/billingRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
@@ -34,6 +35,7 @@ app.use('/api/prescriptions', prescriptionRoutes);
 app.use('/api/billings', billingRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/doctors', doctorRoutes);
+app.use('/api/chat', chatRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
