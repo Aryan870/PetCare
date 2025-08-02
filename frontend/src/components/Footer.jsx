@@ -24,7 +24,7 @@ const Footer = () => {
           <ul className="flex flex-col gap-2 text-gray-600">
             <li>Home</li>
             <li>About us</li>
-            <li>Delivery</li>
+            <li>Services</li>
             <li>Privacy policy</li>
           </ul>
         </div>
@@ -41,7 +41,7 @@ const Footer = () => {
       <div>
         <hr />
         <p className="py-5 text-sm text-center">
-          Copyright 2025 @ Telemedicine.com - All Right Reserved.
+          Copyright 2025 @ PetConnect Clinic - All Rights Reserved.
         </p>
       </div>
     </div>
