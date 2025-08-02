@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const EditPatient = () => {
+  console.log("EditPatient component mounted");
   const { id } = useParams();
   const navigate = useNavigate();
   const [patient, setPatient] = useState({
@@ -11,6 +12,9 @@ const EditPatient = () => {
     password: "",
     age: "",
     medicalHistory: "",
+    address: "",
+    phone: "",
+    breed: "",
   });
 
   useEffect(() => {
@@ -33,7 +37,11 @@ const EditPatient = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/auth/${id}`, patient);
+      const patientToUpdate = { ...patient };
+      if (patientToUpdate.password === "") {
+        delete patientToUpdate.password;
+      }
+      await axios.put(`http://localhost:5000/api/auth/${id}`, patientToUpdate);
       alert("Patient updated successfully!");
       navigate("/admin/patients");
     } catch (error) {
@@ -60,7 +68,7 @@ const EditPatient = () => {
 
           <div className="mb-4">
             <label className="block font-medium">Password:</label>
-            <input type="text" name="password" value="" placeholder="New Password" onChange={handleChange} className="w-full p-2 border rounded-md" required />
+            <input type="text" name="password"  placeholder="New Password" onChange={handleChange} className="w-full p-2 border rounded-md" />
           </div>
 
           <div className="mb-4">
@@ -71,6 +79,21 @@ const EditPatient = () => {
           <div className="mb-4">
             <label className="block font-medium">Medical History:</label>
             <input type="text" name="medicalHistory" value={patient.medicalHistory} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+          </div>
+
+          <div className="mb-4">
+            <label className="block font-medium">Address:</label>
+            <input type="text" name="address" value={patient.address} onChange={handleChange} className="w-full p-2 border rounded-md" />
+          </div>
+
+          <div className="mb-4">
+            <label className="block font-medium">Phone:</label>
+            <input type="text" name="phone" value={patient.phone} onChange={handleChange} className="w-full p-2 border rounded-md" />
+          </div>
+
+          <div className="mb-4">
+            <label className="block font-medium">Breed:</label>
+            <input type="text" name="breed" value={patient.breed} onChange={handleChange} className="w-full p-2 border rounded-md" />
           </div>
 
           <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded-md">

@@ -73,7 +73,7 @@ const DoctorDashboard = () => {
         <p className="text-gray-600"><strong>Name:</strong> {doctor.name}</p>
         <p className="text-gray-600"><strong>Specialization:</strong> {doctor.speciality}</p>
         <p className="text-gray-600"><strong>Fees:</strong> ₹{doctor.fee}</p>
-        <p className="text-gray-600"><strong>About:</strong> ₹{doctor.about}</p>
+        <p className="text-gray-600"><strong>About:</strong> {doctor.about}</p>
       </div>
 
       {/* Available Slots */}
