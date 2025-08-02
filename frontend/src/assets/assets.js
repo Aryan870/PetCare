@@ -33,9 +33,9 @@ import doc15 from "./doc15.png";
 import Emergency from "../images/emergency1.png";
 import Surgery from "../images/Surgery.png";
 import Dermatologist from "../images/Dermatology.png";
-import InternalMedicine from "../images/InternalMedicine.png";
-import Radiology from "../images/Dentistry.png";
-import Dentistry from "../images/Radiology.png";
+import Ophthalmology from "../images/Ophthalmology.png";
+import Radiology from "../images/Radiology.png";
+import Dentistry from "../images/Dentistry.png";
 
 export const assets = {
   appointment_img,
@@ -63,12 +63,8 @@ export const specialityData = [
     image: Surgery,
   },
   {
-    speciality: "Internal Medicine",
-    image: InternalMedicine,
-  },
-  {
     speciality: "Ophthalmology",
-    image: Ophthalmologyed,
+    image: Ophthalmology,
   },
   {
     speciality: "Dermatologist",
