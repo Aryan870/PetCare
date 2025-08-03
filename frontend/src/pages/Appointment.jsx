@@ -245,33 +245,41 @@ const Appointment = () => {
             </div>
 
             {/* Booking slots */}
-            <div className="p-6 max-w-lg mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Book Appointment</h2>
+            {(() => {
+                const user = JSON.parse(localStorage.getItem("user"));
+                if (!user || user.role === "doctor") {
+                    return null; // Do not show booking options if not logged in or if logged in as a doctor
+                }
+                return (
+                    <div className="p-6 max-w-lg mx-auto">
+                        <h2 className="text-2xl font-bold mb-4">Book Appointment</h2>
 
-      <label className="block mb-2 font-medium">Select Date:</label>
-      <select className="w-full p-2 border rounded-md" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}>
-        <option value="">-- Choose a Date --</option>
-        {availableDates.map(({ formatted }) => (
-          <option key={formatted} value={formatted}>{formatted}</option>
-        ))}
-      </select>
+                        <label className="block mb-2 font-medium">Select Date:</label>
+                        <select className="w-full p-2 border rounded-md" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}>
+                            <option value="">-- Choose a Date --</option>
+                            {availableDates.map(({ formatted }) => (
+                                <option key={formatted} value={formatted}>{formatted}</option>
+                            ))}
+                        </select>
 
-      <label className="block mt-4 mb-2 font-medium">Select Time Slot:</label>
-      <select className="w-full p-2 border rounded-md" value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)} disabled={!selectedDate}>
-        <option value="">-- Choose a Time --</option>
-        {availableTimeSlots.map((slot, index) => (
-          <option key={index} value={slot}>{slot}</option>
-        ))}
-      </select>
+                        <label className="block mt-4 mb-2 font-medium">Select Time Slot:</label>
+                        <select className="w-full p-2 border rounded-md" value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)} disabled={!selectedDate}>
+                            <option value="">-- Choose a Time --</option>
+                            {availableTimeSlots.map((slot, index) => (
+                                <option key={index} value={slot}>{slot}</option>
+                            ))}
+                        </select>
 
-      <button onClick={handleConfirmBooking} disabled={!selectedDate || !selectedTime || isLoading} className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md">
-        {isLoading ? "Processing..." : `Confirm & Pay ${currencySymbol}${docInfo.fee}`}
-      </button>
+                        <button onClick={handleConfirmBooking} disabled={!selectedDate || !selectedTime || isLoading} className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md">
+                            {isLoading ? "Processing..." : `Confirm & Pay ${currencySymbol}${docInfo.fee}`}
+                        </button>
 
-      <button onClick={handleBypassPayment} disabled={!selectedDate || !selectedTime || isLoading} className="mt-4 w-full bg-gray-500 text-white py-2 rounded-md">
-        Bypass Payment & Book
-      </button>
-    </div>
+                        <button onClick={handleBypassPayment} disabled={!selectedDate || !selectedTime || isLoading} className="mt-4 w-full bg-gray-500 text-white py-2 rounded-md">
+                            Bypass Payment & Book
+                        </button>
+                    </div>
+                );
+            })()}
 
             {/* Listing Related Doctors */}
             <RelatedDoctors speciality={docInfo.speciality} docId={docId} />

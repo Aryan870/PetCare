@@ -126,12 +126,6 @@ const Navbar = () => {
                 >
                   All Prescriptions
                 </p>
-                <p
-                  onClick={() => navigate("/admin/billings")}
-                  className="cursor-pointer hover:text-blue-600"
-                >
-                  All Billings
-                </p>
 
                 <hr className="my-2" />
                 <p
