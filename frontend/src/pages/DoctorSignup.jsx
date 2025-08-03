@@ -77,9 +77,9 @@ const DoctorSignup = () => {
   return (
     <div className="flex flex-col lg:flex-row items-center lg:justify-between p-10 space-y-10 lg:space-y-0">
       {/* Image Section */}
-      <div className="md:w-1/2 rounded-2xl overflow-hidden shadow-lg flex justify-center">
+      <div className="md:w-1/2 rounded-2xl overflow-hidden flex justify-center">
         <img
-          src="src/assets/group-of-doctors.png"
+          src="src/images/group-of-doctors.png"
           alt="Group of Doctors"
           className="w-full max-w-xl h-auto object-cover rounded-xl shadow-md border border-gray-200"
         />
