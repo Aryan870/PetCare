@@ -2,6 +2,11 @@ const Appointment = require('../models/Appointment');
 
 exports.createAppointment = async (req, res) => {
     try {
+        const { doctorId, date, time } = req.body;
+        const existingAppointment = await Appointment.findOne({ doctorId, date, time });
+        if (existingAppointment) {
+            return res.status(409).send({ message: 'Appointment slot is already booked' });
+        }
         const appointment = new Appointment(req.body);
         await appointment.save();
         res.status(201).send({ message: 'Appointment created successfully' });
@@ -68,6 +73,17 @@ exports.getAppointmentsByPatient = async (req, res) => {
     try {
         const appointments = await Appointment.find({ patientId: req.params.id }).populate('doctorId');
         res.status(200).send(appointments);
+    } catch (error) {
+        res.status(400).send({ error: error.message });
+    }
+};
+
+exports.getAvailableSlots = async (req, res) => {
+    try {
+        const { doctorId, date } = req.query;
+        const appointments = await Appointment.find({ doctorId, date });
+        const bookedSlots = appointments.map(appointment => appointment.time);
+        res.status(200).send(bookedSlots);
     } catch (error) {
         res.status(400).send({ error: error.message });
     }

@@ -11,6 +11,7 @@ const BookAppointment = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [availableDates, setAvailableDates] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  const [bookedSlots, setBookedSlots] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -77,6 +78,21 @@ const BookAppointment = () => {
       setAvailableTimeSlots(slots);
     }
   }, [selectedDate, doctor.timings]);
+
+  useEffect(() => {
+    if (!selectedDate || !doctor) return;
+
+    const fetchBookedSlots = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/appointments/available-slots?doctorId=${doctor._id}&date=${selectedDate}`);
+        setBookedSlots(response.data);
+      } catch (error) {
+        console.error("Error fetching booked slots:", error);
+      }
+    };
+
+    fetchBookedSlots();
+  }, [selectedDate, doctor]);
 
   const handleConfirmBooking = async () => {
     if (!selectedDate || !selectedTime) {
@@ -210,7 +226,10 @@ const BookAppointment = () => {
       <select className="w-full p-2 border rounded-md" value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)} disabled={!selectedDate}>
         <option value="">-- Choose a Time --</option>
         {availableTimeSlots.map((slot, index) => (
-          <option key={index} value={slot}>{slot}</option>
+          <option key={index} value={slot} disabled={bookedSlots.includes(slot)}>
+            {slot}
+            {bookedSlots.includes(slot) && " (Booked)"}
+          </option>
         ))}
       </select>
 
