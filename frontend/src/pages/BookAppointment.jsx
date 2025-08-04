@@ -6,7 +6,7 @@ import { addDays, format, startOfDay } from "date-fns";
 const BookAppointment = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { doctor } = location.state || {};
+  const { doctor, isEmergency } = location.state || {};
 
   const [selectedDate, setSelectedDate] = useState("");
   const [availableDates, setAvailableDates] = useState([]);
@@ -14,6 +14,14 @@ const BookAppointment = () => {
   const [bookedSlots, setBookedSlots] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (isEmergency) {
+      const now = new Date();
+      setSelectedDate(format(now, "yyyy-MM-dd"));
+      setSelectedTime(`${now.getHours()}:00 - ${now.getHours() + 1}:00`);
+    }
+  }, [isEmergency]);
 
   useEffect(() => {
     if (!doctor) {
@@ -214,24 +222,28 @@ const BookAppointment = () => {
     <div className="p-6 max-w-lg mx-auto">
       <h2 className="text-2xl font-bold mb-4">Book Appointment</h2>
 
-      <label className="block mb-2 font-medium">Select Date:</label>
-      <select className="w-full p-2 border rounded-md" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}>
-        <option value="">-- Choose a Date --</option>
-        {availableDates.map(({ formatted }) => (
-          <option key={formatted} value={formatted}>{formatted}</option>
-        ))}
-      </select>
+      {!isEmergency && (
+        <>
+          <label className="block mb-2 font-medium">Select Date:</label>
+          <select className="w-full p-2 border rounded-md" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}>
+            <option value="">-- Choose a Date --</option>
+            {availableDates.map(({ formatted }) => (
+              <option key={formatted} value={formatted}>{formatted}</option>
+            ))}
+          </select>
 
-      <label className="block mt-4 mb-2 font-medium">Select Time Slot:</label>
-      <select className="w-full p-2 border rounded-md" value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)} disabled={!selectedDate}>
-        <option value="">-- Choose a Time --</option>
-        {availableTimeSlots.map((slot, index) => (
-          <option key={index} value={slot} disabled={bookedSlots.includes(slot)}>
-            {slot}
-            {bookedSlots.includes(slot) && " (Booked)"}
-          </option>
-        ))}
-      </select>
+          <label className="block mt-4 mb-2 font-medium">Select Time Slot:</label>
+          <select className="w-full p-2 border rounded-md" value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)} disabled={!selectedDate}>
+            <option value="">-- Choose a Time --</option>
+            {availableTimeSlots.map((slot, index) => (
+              <option key={index} value={slot} disabled={bookedSlots.includes(slot)}>
+                {slot}
+                {bookedSlots.includes(slot) && " (Booked)"}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
 
       <button onClick={handleConfirmBooking} disabled={!selectedDate || !selectedTime || isLoading} className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md">
         {isLoading ? "Processing..." : `Confirm & Pay ₹${doctor.fee}`}

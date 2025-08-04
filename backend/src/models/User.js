@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
     breed: { type: String, required: function() { return this.role === 'patient'; } }, 
     age: { type: Number, required: function() { return this.role === 'patient'; } },
     about: { type: String, required: function() { return this.role === 'doctor'; } },
+    isAvailable: { type: Boolean, default: false },
     
 });
 

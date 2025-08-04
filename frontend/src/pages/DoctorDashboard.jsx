@@ -10,12 +10,14 @@ const DoctorDashboard = () => {
   const [parsedAvailability, setParsedAvailability] = useState([]);
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isAvailable, setIsAvailable] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       const storedUser = JSON.parse(localStorage.getItem("user"));
       if (storedUser && storedUser.role === "doctor") {
         setDoctor(storedUser);
+        setIsAvailable(storedUser.isAvailable);
 
         if (storedUser.timings) {
           const availabilityArray = storedUser.timings.split('; ').map(slot => {
@@ -61,6 +63,17 @@ const DoctorDashboard = () => {
     return appointment ? appointment.date : 'N/A';
   };
 
+  const handleAvailabilityChange = async () => {
+    try {
+      const res = await axios.put(`http://localhost:5000/api/doctors/${doctor._id}/availability`, { isAvailable: !isAvailable });
+      setDoctor(res.data);
+      setIsAvailable(!isAvailable);
+      localStorage.setItem("user", JSON.stringify(res.data));
+    } catch (error) {
+      console.error("Error updating availability:", error);
+    }
+  };
+
   if (loading) return <div className="text-center p-4">Loading doctor details...</div>;
 
   return (
@@ -69,7 +82,16 @@ const DoctorDashboard = () => {
 
       {/* Doctor Info */}
       <div className="bg-white shadow-lg rounded-2xl p-6 mb-8">
-        <h2 className="text-xl font-semibold mb-3 text-gray-800">Doctor Details</h2>
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-xl font-semibold text-gray-800">Doctor Details</h2>
+          <div className="flex items-center">
+            <span className="mr-2">Available for Emergency</span>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked={isAvailable} onChange={handleAvailabilityChange} className="sr-only peer" />
+              <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+        </div>
         <p className="text-gray-600"><strong>Name:</strong> {doctor.name}</p>
         <p className="text-gray-600"><strong>Specialization:</strong> {doctor.speciality}</p>
         <p className="text-gray-600"><strong>Fees:</strong> ₹{doctor.fee}</p>
