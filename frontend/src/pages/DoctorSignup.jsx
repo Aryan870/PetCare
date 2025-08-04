@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -13,14 +13,58 @@ const DoctorSignup = () => {
     fee: "",
     speciality: "",
     experience: "",
-    timings: "",
     availability: [{ day: "", startTime: "", endTime: "" }],
     about: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    validateForm();
+  }, [formData]);
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name) newErrors.name = "Full name is required.";
+    if (!formData.email) {
+      newErrors.email = "Email is required.";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid.";
+    }
+    if (!formData.password) {
+      newErrors.password = "Password is required.";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long.";
+    }
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match.";
+    }
+    if (!formData.fee) {
+        newErrors.fee = "Fee is required.";
+    } else if (isNaN(formData.fee) || Number(formData.fee) <= 0) {
+        newErrors.fee = "Fee must be a positive number.";
+    }
+    if (!formData.speciality) newErrors.speciality = "Specialization is required.";
+    if (!formData.experience) {
+        newErrors.experience = "Experience is required.";
+    } else if (isNaN(formData.experience) || Number(formData.experience) < 0) {
+        newErrors.experience = "Experience must be a non-negative number.";
+    }
+    if (!formData.about) newErrors.about = "About section is required.";
+
+    formData.availability.forEach((item, index) => {
+        if (!item.day || !item.startTime || !item.endTime) {
+            newErrors[`availability${index}`] = "All availability fields are required.";
+        }
+    });
+
+    setErrors(newErrors);
+    setIsFormValid(Object.keys(newErrors).length === 0);
+  };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,16 +96,18 @@ const DoctorSignup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
+    validateForm();
+    if (!isFormValid) {
+        return;
     }
     try {
-      const { confirmPassword, availability, ...rest } = formData;
-      const timings = availability
+      const { confirmPassword, ...rest } = formData;
+      const timings = rest.availability
         .map((item) => `${item.day}: ${item.startTime}-${item.endTime}`)
         .join("; ");
       const dataToSend = { ...rest, timings };
+      delete dataToSend.availability; 
+
       const response = await axios.post(
         "http://localhost:5000/api/auth/register",
         dataToSend
@@ -70,7 +116,7 @@ const DoctorSignup = () => {
       navigate("/doctorLogin");
     } catch (error) {
       console.error("Error registering the doctor:", error);
-      setError("Registration failed. Please try again.");
+      setErrors({ submit: "Registration failed. Please try again." });
     }
   };
 
@@ -98,9 +144,9 @@ const DoctorSignup = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              required
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+              className={`w-full p-3 border rounded-lg focus:outline-none focus:ring ${errors.name ? 'border-red-500 focus:ring-red-300' : 'focus:ring-blue-300'}`}
             />
+            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
           </div>
 
           <div>
@@ -110,9 +156,9 @@ const DoctorSignup = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              required
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+              className={`w-full p-3 border rounded-lg focus:outline-none focus:ring ${errors.email ? 'border-red-500 focus:ring-red-300' : 'focus:ring-blue-300'}`}
             />
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
           </div>
 
           <div>
@@ -123,8 +169,7 @@ const DoctorSignup = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                className={`w-full p-3 border rounded-lg focus:outline-none focus:ring ${errors.password ? 'border-red-500 focus:ring-red-300' : 'focus:ring-blue-300'}`}
               />
               <button
                 type="button"
@@ -134,6 +179,7 @@ const DoctorSignup = () => {
                 {showPassword ? "Hide" : "Show"}
               </button>
             </div>
+            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
           </div>
 
           <div>
@@ -146,8 +192,7 @@ const DoctorSignup = () => {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                className={`w-full p-3 border rounded-lg focus:outline-none focus:ring ${errors.confirmPassword ? 'border-red-500 focus:ring-red-300' : 'focus:ring-blue-300'}`}
               />
               <button
                 type="button"
@@ -157,9 +202,10 @@ const DoctorSignup = () => {
                 {showConfirmPassword ? "Hide" : "Show"}
               </button>
             </div>
+            {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
           </div>
 
-          {error && <div className="text-red-500 text-sm">{error}</div>}
+          {errors.submit && <div className="text-red-500 text-sm">{errors.submit}</div>}
 
           <div>
             <label className="block text-gray-700 mb-2">Fees:</label>
@@ -168,9 +214,9 @@ const DoctorSignup = () => {
               name="fee"
               value={formData.fee}
               onChange={handleChange}
-              required
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+              className={`w-full p-3 border rounded-lg focus:outline-none focus:ring ${errors.fee ? 'border-red-500 focus:ring-red-300' : 'focus:ring-blue-300'}`}
             />
+            {errors.fee && <p className="text-red-500 text-xs mt-1">{errors.fee}</p>}
           </div>
 
           <div>
@@ -180,9 +226,9 @@ const DoctorSignup = () => {
               name="speciality"
               value={formData.speciality}
               onChange={handleChange}
-              required
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+              className={`w-full p-3 border rounded-lg focus:outline-none focus:ring ${errors.speciality ? 'border-red-500 focus:ring-red-300' : 'focus:ring-blue-300'}`}
             />
+            {errors.speciality && <p className="text-red-500 text-xs mt-1">{errors.speciality}</p>}
           </div>
 
           <div>
@@ -194,9 +240,9 @@ const DoctorSignup = () => {
               name="experience"
               value={formData.experience}
               onChange={handleChange}
-              required
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+              className={`w-full p-3 border rounded-lg focus:outline-none focus:ring ${errors.experience ? 'border-red-500 focus:ring-red-300' : 'focus:ring-blue-300'}`}
             />
+            {errors.experience && <p className="text-red-500 text-xs mt-1">{errors.experience}</p>}
           </div>
 
           <h3 className="text-xl font-bold text-gray-700 mt-5">Availability</h3>
@@ -208,8 +254,7 @@ const DoctorSignup = () => {
                   name="day"
                   value={availability.day}
                   onChange={(e) => handleAvailabilityChange(index, e)}
-                  required
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                  className={`w-full p-3 border rounded-lg focus:outline-none focus:ring ${errors[`availability${index}`] ? 'border-red-500 focus:ring-red-300' : 'focus:ring-blue-300'}`}
                 >
                   <option value="">Select a day</option>
                   <option value="Monday">Monday</option>
@@ -229,8 +274,7 @@ const DoctorSignup = () => {
                     name="startTime"
                     value={availability.startTime}
                     onChange={(e) => handleAvailabilityChange(index, e)}
-                    required
-                    className="w-full p-3 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                    className={`w-full p-3 border rounded-lg focus:outline-none focus:ring ${errors[`availability${index}`] ? 'border-red-500 focus:ring-red-300' : 'focus:ring-blue-300'}`}
                   />
                 </div>
                 <div className="w-1/2">
@@ -240,11 +284,11 @@ const DoctorSignup = () => {
                     name="endTime"
                     value={availability.endTime}
                     onChange={(e) => handleAvailabilityChange(index, e)}
-                    required
-                    className="w-full p-3 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                    className={`w-full p-3 border rounded-lg focus:outline-none focus:ring ${errors[`availability${index}`] ? 'border-red-500 focus:ring-red-300' : 'focus:ring-blue-300'}`}
                   />
                 </div>
               </div>
+              {errors[`availability${index}`] && <p className="text-red-500 text-xs mt-1">{errors[`availability${index}`]}</p>}
             </div>
           ))}
 
@@ -263,14 +307,15 @@ const DoctorSignup = () => {
               name="about"
               value={formData.about}
               onChange={handleChange}
-              required
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+              className={`w-full p-3 border rounded-lg focus:outline-none focus:ring ${errors.about ? 'border-red-500 focus:ring-red-300' : 'focus:ring-blue-300'}`}
             />
+            {errors.about && <p className="text-red-500 text-xs mt-1">{errors.about}</p>}
           </div>
 
           <button
             type="submit"
-            className="mt-5 w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700"
+            disabled={!isFormValid}
+            className="mt-5 w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 disabled:bg-gray-400"
           >
             Register
           </button>
@@ -281,3 +326,4 @@ const DoctorSignup = () => {
 };
 
 export default DoctorSignup;
+

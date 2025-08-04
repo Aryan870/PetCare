@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -18,7 +18,46 @@ const PatientSignUp = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    validateForm();
+  }, [formData]);
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name) newErrors.name = "Full name is required.";
+    if (!formData.email) {
+      newErrors.email = "Email is required.";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid.";
+    }
+    if (!formData.password) {
+      newErrors.password = "Password is required.";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long.";
+    }
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match.";
+    }
+    if (!formData.phone) {
+        newErrors.phone = "Phone number is required.";
+    } else if (!/^\d{10}$/.test(formData.phone)) {
+        newErrors.phone = "Phone number must be 10 digits.";
+    }
+    if (!formData.address) newErrors.address = "Address is required.";
+    if (!formData.breed) newErrors.breed = "Breed is required.";
+    if (!formData.age) {
+        newErrors.age = "Age is required.";
+    } else if (isNaN(formData.age) || Number(formData.age) <= 0) {
+        newErrors.age = "Age must be a positive number.";
+    }
+    if (!formData.medicalHistory) newErrors.medicalHistory = "Medical history is required.";
+
+    setErrors(newErrors);
+    setIsFormValid(Object.keys(newErrors).length === 0);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,9 +69,9 @@ const PatientSignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
+    validateForm();
+    if (!isFormValid) {
+        return;
     }
     try {
       const { confirmPassword, ...dataToSend } = formData;
@@ -41,7 +80,7 @@ const PatientSignUp = () => {
       navigate("/patientLogin");
     } catch (error) {
       console.error("There was an error registering the patient!", error);
-      setError("Registration failed. Please try again.");
+      setErrors({ submit: "Registration failed. Please try again." });
     }
   };
 
@@ -72,9 +111,9 @@ const PatientSignUp = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                className={`w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 ${errors.name ? 'border-red-500 focus:ring-red-400' : 'focus:ring-green-400'} transition`}
               />
+              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
             </div>
             <div>
               <label className="block text-gray-700 mb-2 font-semibold">
@@ -85,9 +124,9 @@ const PatientSignUp = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                className={`w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 ${errors.email ? 'border-red-500 focus:ring-red-400' : 'focus:ring-green-400'} transition`}
               />
+              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </div>
             <div>
               <label className="block text-gray-700 mb-2 font-semibold">
@@ -99,8 +138,7 @@ const PatientSignUp = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  required
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                  className={`w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 ${errors.password ? 'border-red-500 focus:ring-red-400' : 'focus:ring-green-400'} transition`}
                 />
                 <button
                   type="button"
@@ -110,6 +148,7 @@ const PatientSignUp = () => {
                   {showPassword ? "Hide" : "Show"}
                 </button>
               </div>
+              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
             </div>
             <div>
               <label className="block text-gray-700 mb-2 font-semibold">
@@ -121,8 +160,7 @@ const PatientSignUp = () => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  required
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                  className={`w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 ${errors.confirmPassword ? 'border-red-500 focus:ring-red-400' : 'focus:ring-green-400'} transition`}
                 />
                 <button
                   type="button"
@@ -132,9 +170,10 @@ const PatientSignUp = () => {
                   {showConfirmPassword ? "Hide" : "Show"}
                 </button>
               </div>
+              {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
             </div>
-            {error && (
-              <div className="text-red-500 text-sm text-center">{error}</div>
+            {errors.submit && (
+              <div className="text-red-500 text-sm text-center">{errors.submit}</div>
             )}
             <div>
               <label className="block text-gray-700 mb-2 font-semibold">
@@ -157,9 +196,9 @@ const PatientSignUp = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                className={`w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 ${errors.phone ? 'border-red-500 focus:ring-red-400' : 'focus:ring-green-400'} transition`}
               />
+              {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
             </div>
             <div>
               <label className="block text-gray-700 mb-2 font-semibold">
@@ -170,9 +209,9 @@ const PatientSignUp = () => {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                className={`w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 ${errors.address ? 'border-red-500 focus:ring-red-400' : 'focus:ring-green-400'} transition`}
               />
+              {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
             </div>
             <div>
               <label className="block text-gray-700 mb-2 font-semibold">
@@ -183,9 +222,9 @@ const PatientSignUp = () => {
                 name="breed"
                 value={formData.breed}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                className={`w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 ${errors.breed ? 'border-red-500 focus:ring-red-400' : 'focus:ring-green-400'} transition`}
               />
+              {errors.breed && <p className="text-red-500 text-xs mt-1">{errors.breed}</p>}
             </div>
              <div>
               <label className="block text-gray-700 mb-2 font-semibold">
@@ -196,9 +235,9 @@ const PatientSignUp = () => {
                 name="age"
                 value={formData.age}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                className={`w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 ${errors.age ? 'border-red-500 focus:ring-red-400' : 'focus:ring-green-400'} transition`}
               />
+              {errors.age && <p className="text-red-500 text-xs mt-1">{errors.age}</p>}
             </div>
              <div>
               <label className="block text-gray-700 mb-2 font-semibold">
@@ -209,13 +248,14 @@ const PatientSignUp = () => {
                 name="medicalHistory"
                 value={formData.medicalHistory}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                className={`w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 ${errors.medicalHistory ? 'border-red-500 focus:ring-red-400' : 'focus:ring-green-400'} transition`}
               />
+              {errors.medicalHistory && <p className="text-red-500 text-xs mt-1">{errors.medicalHistory}</p>}
             </div>
             <button
               type="submit"
-              className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition mt-6 font-semibold"
+              disabled={!isFormValid}
+              className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition mt-6 font-semibold disabled:bg-gray-400"
             >
               Register
             </button>
@@ -227,3 +267,4 @@ const PatientSignUp = () => {
 };
 
 export default PatientSignUp;
+
